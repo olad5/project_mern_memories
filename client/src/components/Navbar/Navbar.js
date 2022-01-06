@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { AppBar, Typography, Toolbar, Button, Avatar } from '@material-ui/core';
+import React, {useState, useEffect} from 'react';
+import {Link, useNavigate, useLocation} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {AppBar, Typography, Toolbar, Button, Avatar} from '@material-ui/core';
 import usestyles from './styles';
+import decode from 'jwt-decode';
 import memories from '../../images/memories.png';
 
 const Navbar = () => {
   const classes = usestyles();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
 
-  console.log(user);
-
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
   const logout = () => {
-    dispatch({ type: 'LOGOUT' });
+    dispatch({type: 'LOGOUT'});
     navigate('/');
     setUser(null);
   };
@@ -24,9 +23,13 @@ const Navbar = () => {
     const token = user?.token;// checks if the token exists
 
     // check for the JWT during the manual signup
+    if (token) {
+      const decodedToken = decode(token)// this gives info about when the token is expiring
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout() // logs the user out if token expired
+    }
 
     setUser(JSON.parse(localStorage.getItem('profile')));
-  }, [location]);
+  }, [location]); // basically this runs when the location changes
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">

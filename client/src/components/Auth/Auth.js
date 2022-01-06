@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { Typography, Paper, Button, Grid, Container, Avatar } from '@material-ui/core';
-import { GoogleLogin } from 'react-google-login';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Typography, Paper, Button, Grid, Container, Avatar} from '@material-ui/core';
+import {GoogleLogin} from 'react-google-login';
+import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import {signin, signup} from '../../actions/auth';
 import useStyles from './styles';
 import Input from './Input';
 import Icon from './icon';
+
+const initialState = {firstName: '', lastName: '', email: '', password: '', confirmPassword: ''};
 
 const Auth = () => {
   const classes = useStyles();
@@ -14,8 +17,15 @@ const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const handleSubmit = () => {
+  const [formData, setFormData] = useState(initialState);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      dispatch(signup(formData, navigate));
+    } else {
+      dispatch(signin(formData, navigate));
+    }
   };
 
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -24,7 +34,7 @@ const Auth = () => {
     const result = res?.profileObj;
     const token = res?.tokenId;
     try {
-      dispatch({ type: 'AUTH', data: { result, token } });// dispatch action
+      dispatch({type: 'AUTH', data: {result, token}});// dispatch action
       navigate('/');// redirects back to home page once you login
     } catch (error) {
       console.log(error);
@@ -36,8 +46,8 @@ const Auth = () => {
     console.log('Google Sign In was unsuccessful. Try Again Later');
   };
 
-  const handleChange = () => {
-
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   const switchMode = () => { // this is to switch from sign up to sign in
@@ -94,4 +104,5 @@ const Auth = () => {
     </Container>
   );
 };
+
 export default Auth;
