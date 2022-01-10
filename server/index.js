@@ -16,7 +16,7 @@ app.use(cors());
 app.use('/posts', postRoutes);
 app.use('/user', userRoutes);
 
-const CONNECTION_URL = ''
+export const CONNECTION_URL = 'mongodb url'
 
 const PORT = process.env.PORT || 5000;
 
