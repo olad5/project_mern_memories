@@ -19,13 +19,11 @@ const PostDetails = () => {
     dispatch(getPost(id));
   }, [id]);// when the id of the url changes, you fetch the post with that id
 
-  // TODO: This has an issue on the backend
-  // useEffect(() => {
-  //   if (post) {
-  //     dispatch(getPostsBySearch({ search: 'none', tags: post?.tags.join(',') }));// tells redux to change the state to data gotten from server
-  //     // console.log(posts);
-  //   }
-  // }, [post]);
+  useEffect(() => {
+    if (post) {
+      dispatch(getPostsBySearch({ search: 'none', tags: post?.tags.join(',') }));// tells redux to change the state to data gotten from server
+    }
+  }, [post]);
 
   if (!post) return null;
   const openPost = (_id) => navigate(`/posts/${_id}`);

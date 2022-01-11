@@ -6,9 +6,10 @@ import auth from '../middleware/auth.js';
 const router = express.Router();
 
 router.get('/', getPosts);
+router.get('/search', getPostsBySearch);// this should be before /:id route cos  express considers /:id as a catch all so the code in /search won't work 
+
 router.get('/:id', getPost);
 router.post('/', auth, createPost);
-router.get('/search', getPostsBySearch);
 router.patch('/:id', auth, updatePost);
 router.delete('/:id', auth, deletePost);
 router.patch('/:id/likePost', auth, likePost);
